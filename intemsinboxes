@@ -41,8 +41,24 @@ $items = array (
   '6028793024' => '12'
 );
 
-echo $items;
-	
+
+echo count($items);
+
+echo '<br>';
+
+print("<pre>".print_r($items,true)."</pre>");
+
+var_dump($items);
+
+/*
+print "<pre>";
+print_r($items);
+print "</pre>";
+*/	
+echo '<br>';
+
+
+
 /*
 boxes array is $boxId => [$itemId => $quantityInBox]
 This array has the catalog of boxes available to buy.
@@ -168,7 +184,7 @@ $boxes = array (
       ),
 );
 
-echo $boxes;
+//echo $boxes;
 /*
 We have boxes which have N items in it with N quantity. Items can be in 1 or more boxes.
 How many boxes from which box do I need to buy, to satisfy the needed item quantities?
@@ -176,3 +192,15 @@ The provided data should give back: needed box quantity and which items are in t
 What would be the best combination to have least amount of boxes.
 An OOP approach would add more point to the test.
 */
+
+/*
+foreach($boxes[0] as $child) {
+	echo $child . "\n";	
+}
+*/
+
+foreach ($boxes as $i => $value) {
+	foreach ($items as $n => $value) {
+		echo $items[$n] . "<br>";	
+	}
+}
