@@ -2,6 +2,7 @@
 
 class ItemsInBoxes
 {
+
   public function getAppropriateBoxes($items, $boxes)
   {
     $choosenBoxes = array();
@@ -19,9 +20,6 @@ class ItemsInBoxes
 
     return array_values(array_unique($choosenBoxes));
   }
-
-
-
 
 
   public function run(&$items, &$neededBoxes, &$boxes)
@@ -295,7 +293,7 @@ $obj = new ItemsInBoxes();
 $neededBoxes = $obj->getAppropriateBoxes($items, $boxes);
 
 
-echo '<pre>' . print_r($neededBoxes) . '</pre><br>';
+echo 'neededBoxes: <pre>' . print_r($neededBoxes) . '</pre><br>';
 
 
 
@@ -309,31 +307,31 @@ while( $count > 0 )
   // if all items are satisfied we have solution break
   if( $obj->allDone($items) )
   {
-    // We have found solution earlier 
+    // We found solution 
     break;
   }
   $count = count($neededBoxes);
 }
 
 
-$final_result = $obj->getFinalResult($result);
+$finalResult = $obj->getFinalResult($result);
 
-$box_count = 0;
-foreach( $final_result as $boxId => $num_of_boxes)
-  $box_count += $num_of_boxes;
+$boxCount = 0;
+foreach( $finalResult as $boxId => $boxNumber)
+  $boxCount += $boxNumber;
 
 
-echo "Amount of boxes to satisfy required items is: " . $box_count . PHP_EOL . '<br>';
+echo "Amount of boxes to satisfy required items is: " . $boxCount . PHP_EOL . '<br>';
 
 echo "Boxes with number of boxes to buy and items in it are listed below in format BoxId => Amount[list of Items] : \n\n" . '<br>';
 
-foreach( $final_result as $boxId => $num_of_boxes )
+foreach( $finalResult as $boxId => $boxNumber )
 {
-  echo $boxId . " => " . $num_of_boxes . "   [";
+  echo $boxId . " => " . $boxNumber . "   [";
 
-  foreach ($boxes[$boxId] as $item_id => $quantity)
+  foreach ($boxes[$boxId] as $itemId => $quantity)
   {
-    echo $item_id . ", ";
+    echo $itemId . ", ";
   }
-  echo "]" . PHP_EOL  . '<br>';
+  echo "]" . '<br>';
 }
