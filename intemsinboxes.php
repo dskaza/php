@@ -23,8 +23,8 @@ class ItemsInBoxes
 
 
   public function run(&$items, &$neededBoxes, &$boxes)
-  {
-    $boxIndex = array_rand($neededBoxes, 1);
+  {	
+	$boxIndex = 1; 
     $boxId = $neededBoxes[$boxIndex];
 
     $box = $boxes[$boxId];
@@ -36,14 +36,12 @@ class ItemsInBoxes
       if( !isset($items[$productId]) )
         continue;
 
-	     $neededQuantity = $items[$productId];
+	  $neededQuantity = $items[$productId];
 
       // item quantity has already been satisfied, but the box has this item
       // we can skip this product then
-      if( $neededQuantity < 1 )
-      {
-        continue;
-      }
+      if( $neededQuantity < 1 )      
+        continue;      
       
       $requiredBoxes_ = ceil( $neededQuantity / $availableQuantity );
 
