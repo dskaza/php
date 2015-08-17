@@ -1,6 +1,6 @@
 <?php
 
-class Algorithm
+class ItemsInBoxes
 {
   public function getAppropriateBoxes($items, $boxes)
   {
@@ -298,7 +298,7 @@ An OOP approach would add more point to the test.
 echo "We have" . count($items) . "items <br>"; 
 
 
-$r = new Algorithm();
+$r = new ItemsInBoxes();
 
 // traverse throught all items and get array of boxes in which they are
 //
