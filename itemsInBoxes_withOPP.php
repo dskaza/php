@@ -4,81 +4,77 @@ class ItemsInBoxes
 {
   public function getAppropriateBoxes($items, $boxes)
   {
-    $choosen_boxes = array();
+    $choosenBoxes = array();
 
-    foreach( $items as $item_id => $needed_quantity )
+    foreach( $items as $itemId => $neededQuantity )
     {
       foreach( $boxes as $boxId => $products )
       {
-        if( isset($boxes[$boxId][$item_id]) )
+        if( isset($boxes[$boxId][$itemId]) )
         {
-          $choosen_boxes[] = $boxId;
+          $choosenBoxes[] = $boxId;
         }
       }
     }
 
-    return array_values(array_unique($choosen_boxes));
+    return array_values(array_unique($choosenBoxes));
   }
 
 
 
 
 
-  public function run(&$items, &$needed_boxes, &$boxes)
+  public function run(&$items, &$neededBoxes, &$boxes)
   {
-    $boxIndex = array_rand($needed_boxes, 1);
-    $boxId = $needed_boxes[$boxIndex];
+    $boxIndex = array_rand($neededBoxes, 1);
+    $boxId = $neededBoxes[$boxIndex];
 
     $box = $boxes[$boxId];
-    $required_boxes = 0;
+    $requiredBoxes = 0;
     
-    foreach( $box as $product_id => $available_quantity )
+    foreach( $box as $productId => $availableQuantity )
     {
       // if box has item that we don't need skip it
-      if( !isset($items[$product_id]) )
+      if( !isset($items[$productId]) )
         continue;
 
-      $needed_quantity = $items[$product_id];
+	     $neededQuantity = $items[$productId];
 
       // item quantity has already been satisfied, but the box has this item
       // we can skip this product then
-      if( $needed_quantity < 1 )
+      if( $neededQuantity < 1 )
       {
         continue;
       }
       
-      $required_boxes_ = ceil( $needed_quantity / $available_quantity );
+      $requiredBoxes_ = ceil( $neededQuantity / $availableQuantity );
 
-      if( $required_boxes_ > $required_boxes )
-        $required_boxes = $required_boxes_;
+      if( $requiredBoxes_ > $requiredBoxes )
+        $requiredBoxes = $requiredBoxes_;
 
       // decrease item to 0
-      $items[$product_id] = 0;
+      $items[$productId] = 0;
     }
 
     // we took everything that we need from this box, now 
     // we can delete it
-    unset($needed_boxes[$boxIndex]);
+    unset($neededBoxes[$boxIndex]);
 
     // re-index
-    $needed_boxes = array_values($needed_boxes);
+    $neededBoxes = array_values($neededBoxes);
 
-    return array($boxId => $required_boxes);
+    return array($boxId => $requiredBoxes);
   }
 
 
 
 
-  public function allDone($items)
+  public function allDone($items) 
   {
-    foreach( $items as $item_id => $needed_quantity )
-    {
-      if( $needed_quantity > 0 )
-      {
-        return false;
-      }
+    foreach( $items as $itemId => $neededQuantity ){
+      if( $neededQuantity > 0 )    
+        return false;      
     }
-
     return true;
   }
 
@@ -87,21 +83,15 @@ class ItemsInBoxes
 
   public function getFinalResult($result)
   {
-    $final_result = array();
+    $finalResult = array();
+    foreach( $result as $index => $box )    
+      foreach( $box as $boxId => $neededBoxes )     
+        if( $neededBoxes > 0 )        
+          $finalResult[$boxId] = $neededBoxes;                  
 
-    foreach( $result as $index => $box )
-    {
-      foreach( $box as $boxId => $needed_boxes )
-      {
-        if( $needed_boxes > 0 )
-        {
-          $final_result[$boxId] = $needed_boxes;
-        }
-      }
-    }
-
-    return $final_result;    
+    return $finalResult;    
   }
+
 }
 
 
@@ -298,35 +288,35 @@ An OOP approach would add more point to the test.
 echo "We have" . count($items) . "items <br>"; 
 
 
-$r = new ItemsInBoxes();
+$obj = new ItemsInBoxes();
 
 // traverse throught all items and get array of boxes in which they are
 //
-$needed_boxes = $r->getAppropriateBoxes($items, $boxes);
+$neededBoxes = $obj->getAppropriateBoxes($items, $boxes);
 
 
-echo '<pre>' . print_r($needed_boxes) . '</pre><br>';
+echo '<pre>' . print_r($neededBoxes) . '</pre><br>';
 
 
 
 $result = array();
-$count = count($needed_boxes);
+$count = count($neededBoxes);
 	
 while( $count > 0 )
 {
-  $result[] = $r->run($items, $needed_boxes, $boxes);
+  $result[] = $obj->run($items, $neededBoxes, $boxes);
 
   // if all items are satisfied we have solution break
-  if( $r->allDone($items) )
+  if( $obj->allDone($items) )
   {
     // We have found solution earlier 
     break;
   }
-  $count = count($needed_boxes);
+  $count = count($neededBoxes);
 }
 
 
-$final_result = $r->getFinalResult($result);
+$final_result = $obj->getFinalResult($result);
 
 $box_count = 0;
 foreach( $final_result as $boxId => $num_of_boxes)
